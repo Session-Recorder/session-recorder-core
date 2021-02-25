@@ -1,0 +1,22 @@
+<p>Some Player</p>
+<div id="player"></div>
+<style>
+  #player {
+    border: 1px solid black;
+  }
+</style>
+
+<script>
+  let events = [];
+  let player;
+  axios.get('/api/session/{{sessionId}}').then(({ data }) => {
+    events = data
+    player = new rrwebPlayer({
+      target: document.getElementById('player'), // customizable root element
+      props: {
+        events,
+      },
+    })
+  })
+
+</script>

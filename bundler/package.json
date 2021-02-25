@@ -1,0 +1,17 @@
+{
+  "name": "bundler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "compile": "parcel build bundler/src/index.js --out-dir public/bundle.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "rrweb": "^0.9.14",
+    "shortid": "^2.2.16"
+  }
+}

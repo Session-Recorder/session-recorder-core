@@ -1,0 +1,28 @@
+{
+  "name": "server",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nodemon ./bin/www --ignore database/*",
+    "bundle": "parcel build bundler/src/index.js --out-dir public/bundle",
+    "bundle:watch": "parcel watch bundler/src/index.js --out-dir public/bundle"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "geoip-country": "^4.0.57",
+    "hbs": "~4.0.4",
+    "http-errors": "~1.6.3",
+    "lodash": "^4.17.21",
+    "morgan": "~1.9.1",
+    "nedb": "^1.8.0",
+    "request-country": "^0.1.5",
+    "request-ip": "^2.1.3",
+    "shortid": "^2.2.16"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}

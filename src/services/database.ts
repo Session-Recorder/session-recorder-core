@@ -1,4 +1,4 @@
-const Datastore = require("nedb");
+import Datastore from 'nedb';
 
 const websites = new Datastore({
   filename: "./database/websites.db",
@@ -27,5 +27,4 @@ const database = {
   recordings,
 };
 
-module.exports = database;
-// todo - change to mongodb
+export default database;

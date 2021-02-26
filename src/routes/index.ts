@@ -1,18 +1,18 @@
-var express = require("express");
-var router = express.Router();
-
-const { readFile, writeFile } = require("fs");
-const { join, resolve } = require("path");
-const database = require("../database");
+import express from "express";
+import { readFile, writeFile } from "fs";
+import { join, resolve } from "path";
 const apiUrl = "http://sebastianrcnt.iptime.org:3000";
-const _ = require("lodash");
-const geoip = require("geoip-country");
+import _ from "lodash";
+import geoip from "geoip-country";
+import database from "services/database";
 
-router.get("/", (req, res) => {
-  res.send("Central API")
+const indexRouter = express.Router();
+
+indexRouter.get("/", (req, res) => {
+  res.send("Central API");
 });
 
-router.get("/api/code/:websiteId", (req, res) => {
+indexRouter.get("/api/code/:websiteId", (req, res) => {
   const { websiteId } = req.params;
   const code = `
   <script>
@@ -23,11 +23,10 @@ router.get("/api/code/:websiteId", (req, res) => {
   </script>
   <script src="${apiUrl}/bundle/index.js"></script>
   `;
-  console.log(code);
   res.json(code);
 });
 
-router.post("/api/clients", (req, res) => {
+indexRouter.post("/api/clients", (req, res) => {
   const createdAt = Date.now();
 
   database.clients.insert({ createdAt }, (err, doc) => {
@@ -40,7 +39,7 @@ router.post("/api/clients", (req, res) => {
   });
 });
 
-router.get("/api/websites", (req, res) => {
+indexRouter.get("/api/websites", (req, res) => {
   database.websites.find({}, (err, websites) => {
     if (err) {
       res.status(500).send(err);
@@ -50,7 +49,7 @@ router.get("/api/websites", (req, res) => {
   });
 });
 
-router.post("/api/websites", (req, res) => {
+indexRouter.post("/api/websites", (req, res) => {
   const { name, domain, description } = req.body;
 
   database.websites.insert(
@@ -65,7 +64,7 @@ router.post("/api/websites", (req, res) => {
   );
 });
 
-router.get("/api/websites/:websiteId", (req, res) => {
+indexRouter.get("/api/websites/:websiteId", (req, res) => {
   const { websiteId } = req.params;
 
   database.websites.findOne({ _id: websiteId }, (err, website) => {
@@ -77,7 +76,7 @@ router.get("/api/websites/:websiteId", (req, res) => {
   });
 });
 
-router.patch("/api/websites/:websiteId", (req, res) => {
+indexRouter.patch("/api/websites/:websiteId", (req, res) => {
   const { websiteId } = req.params;
   const data = req.body;
 
@@ -99,7 +98,7 @@ router.patch("/api/websites/:websiteId", (req, res) => {
   );
 });
 
-router.delete("/api/websites/:websiteId", (req, res) => {
+indexRouter.delete("/api/websites/:websiteId", (req, res) => {
   const { websiteId } = req.params;
   database.websites.remove({ _id: websiteId }, (err, n) => {
     if (err) {
@@ -110,7 +109,7 @@ router.delete("/api/websites/:websiteId", (req, res) => {
   });
 });
 
-router.get("/api/sessions", (req, res) => {
+indexRouter.get("/api/sessions", (req, res) => {
   const { websiteId } = req.query;
   database.sessions.find({ websiteId }, (err, sessions) => {
     if (err) {
@@ -126,7 +125,7 @@ router.get("/api/sessions", (req, res) => {
   });
 });
 
-router.get("/api/sessions/:sessionId", (req, res) => {
+indexRouter.get("/api/sessions/:sessionId", (req, res) => {
   const { sessionId } = req.params;
 
   if (!sessionId) {
@@ -142,7 +141,7 @@ router.get("/api/sessions/:sessionId", (req, res) => {
   }
 });
 
-router.delete("/api/sessions/:sessionId", (req, res) => {
+indexRouter.delete("/api/sessions/:sessionId", (req, res) => {
   const { sessionId } = req.params;
   database.sessions.remove({ _id: sessionId }, (err, n) => {
     if (err) {
@@ -153,7 +152,7 @@ router.delete("/api/sessions/:sessionId", (req, res) => {
   });
 });
 
-router.post("/api/delete-sessions/", (req, res) => {
+indexRouter.post("/api/delete-sessions/", (req, res) => {
   const { sessionIdList } = req.body;
   database.sessions.remove(
     { _id: { $in: sessionIdList } },
@@ -168,7 +167,7 @@ router.post("/api/delete-sessions/", (req, res) => {
   );
 });
 
-router.get("/api/sessions/:sessionId/recordings", (req, res) => {
+indexRouter.get("/api/sessions/:sessionId/recordings", (req, res) => {
   const { sessionId } = req.params;
   console.log({ sessionId, body: req.body });
   readFile(
@@ -184,7 +183,7 @@ router.get("/api/sessions/:sessionId/recordings", (req, res) => {
   );
 });
 
-router.post("/api/sessions/:sessionId/recordings", (req, res) => {
+indexRouter.post("/api/sessions/:sessionId/recordings", (req, res) => {
   const { sessionId } = req.params;
 
   database.sessions.findOne({ _id: sessionId }, (err, document) => {
@@ -204,7 +203,7 @@ router.post("/api/sessions/:sessionId/recordings", (req, res) => {
   });
 });
 
-router.post("/api/sessions", (req, res) => {
+indexRouter.post("/api/sessions", (req, res) => {
   let { websiteId } = req.query;
   let { ip, location, clientId } = req.body;
 
@@ -214,7 +213,7 @@ router.post("/api/sessions", (req, res) => {
     // exists ?
     database.websites.findOne({ _id: websiteId }, (err, found) => {
       if (err) {
-        res.status(500).json(error);
+        res.status(500).json(err);
       } else if (!found) {
         res.status(404).json("website not found");
       } else {
@@ -240,7 +239,4 @@ router.post("/api/sessions", (req, res) => {
   }
 });
 
-// create new tracker code?
-// router.get("/", (req, res) => {});
-
-module.exports = router;
+export default indexRouter;

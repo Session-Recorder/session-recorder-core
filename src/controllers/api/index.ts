@@ -2,8 +2,8 @@ import { Router } from "express";
 import websitesRouter from "./websites";
 import sessionsRouter from "./sessions";
 import clientsRouter from "./clients";
-import database from "../../services/database";
-const apiUrl = "http://sebastianrcnt.iptime.org:3000";
+import database from "services/database";
+
 const router = Router();
 
 router.use("/websites", websitesRouter);
@@ -23,20 +23,6 @@ router.post("/delete-sessions", (req, res) => {
 			}
 		}
 	);
-});
-
-router.get("/code/:websiteId", (req, res) => {
-	const { websiteId } = req.params;
-	const code = `
-  <script>
-    window.sessionRecorderConfig = {
-      websiteId: "${websiteId}",
-      apiUrl: "${apiUrl}",
-    };
-  </script>
-  <script src="${apiUrl}/bundle/index.js"></script>
-  `;
-	res.json(code);
 });
 
 export default router;

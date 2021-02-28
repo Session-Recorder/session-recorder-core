@@ -1,5 +1,5 @@
 import { Router } from "express";
-import database from "../../services/database";
+import database from "services/database";
 const router = Router();
 
 router.post("/", (req, res) => {

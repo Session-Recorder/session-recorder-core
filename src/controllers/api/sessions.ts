@@ -2,7 +2,7 @@ import { Router } from "express";
 import { readFile, writeFile } from "fs";
 import geoip from "geoip-country";
 import { join, resolve } from "path";
-import database from "../../services/database";
+import database from "services/database";
 
 const router = Router();
 
@@ -71,15 +71,21 @@ router.post("/:sessionId/recordings", (req, res) => {
 
 	database.sessions.findOne({ _id: sessionId }, (err, document) => {
 		if (err) {
+			console.error("error");
 			res.status(500).json(err);
 		} else if (!document) {
+			console.error("No Document");
 			res.status(404).json("No Document");
 		} else {
+			console.log(
+				join(__dirname, `../../../database/recordings/${sessionId}.json`)
+			);
 			writeFile(
-				join(__dirname, `../database/recordings/${sessionId}.json`),
+				join(__dirname, `../../../database/recordings/${sessionId}.json`),
 				JSON.stringify(req.body.events),
 				(err) => {
 					res.status(200).send("success");
+					console.log("success");
 				}
 			);
 		}

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import _ from "lodash";
-import database from "../../services/database";
+import database from "services/database";
+import { apiUrl } from "config";
 const router = Router();
 
 router.get("/", (req, res) => {
@@ -11,6 +12,32 @@ router.get("/", (req, res) => {
 			res.send(websites);
 		}
 	});
+});
+
+router.get("/:websiteId", (req, res) => {
+	const { websiteId } = req.params;
+
+	database.websites.findOne({ _id: websiteId }, (err, website) => {
+		if (err) {
+			res.status(500).send(err);
+		} else {
+			res.status(200).send(website);
+		}
+	});
+});
+
+router.get("/:websiteId/code", (req, res) => {
+	const { websiteId } = req.params;
+	const code = `
+  <script>
+    window.sessionRecorderConfig = {
+      websiteId: "${websiteId}",
+      apiUrl: "${apiUrl}",
+    };
+  </script>
+  <script src="${apiUrl}/bundle/index.js"></script>
+  `;
+	res.json(code);
 });
 
 router.post("/", (req, res) => {
@@ -25,18 +52,6 @@ router.post("/", (req, res) => {
 			}
 		}
 	);
-});
-
-router.get("/:websiteId", (req, res) => {
-	const { websiteId } = req.params;
-
-	database.websites.findOne({ _id: websiteId }, (err, website) => {
-		if (err) {
-			res.status(500).send(err);
-		} else {
-			res.status(200).send(website);
-		}
-	});
 });
 
 router.patch("/:websiteId", (req, res) => {

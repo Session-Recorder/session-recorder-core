@@ -1,6 +1,6 @@
 import { Router } from "express";
-import database from "services/database";
 import _ from "lodash";
+import database from "../../services/database";
 const router = Router();
 
 router.get("/", (req, res) => {
@@ -15,7 +15,6 @@ router.get("/", (req, res) => {
 
 router.post("/", (req, res) => {
 	const { name, domain, description } = req.body;
-
 	database.websites.insert(
 		{ name, domain, description, sessions: [] },
 		(err, website) => {

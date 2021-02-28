@@ -2,7 +2,7 @@ import { Router } from "express";
 import { readFile, writeFile } from "fs";
 import geoip from "geoip-country";
 import { join, resolve } from "path";
-import database from "services/database";
+import database from "../../services/database";
 
 const router = Router();
 
@@ -65,6 +65,7 @@ router.get("/:sessionId/recordings", (req, res) => {
 	);
 });
 
+// record saving
 router.post("/:sessionId/recordings", (req, res) => {
 	const { sessionId } = req.params;
 

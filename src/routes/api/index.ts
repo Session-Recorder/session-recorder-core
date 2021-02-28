@@ -2,7 +2,7 @@ import { Router } from "express";
 import websitesRouter from "./websites";
 import sessionsRouter from "./sessions";
 import clientsRouter from "./clients";
-import database from "services/database";
+import database from "../../services/database";
 const apiUrl = "http://sebastianrcnt.iptime.org:3000";
 const router = Router();
 

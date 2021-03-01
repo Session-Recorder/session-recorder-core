@@ -1,4 +1,4 @@
-import Datastore from 'nedb';
+import Datastore from "nedb";
 
 const websites = new Datastore({
   filename: "./database/websites.db",
@@ -12,12 +12,12 @@ const sessions = new Datastore({
 
 const clients = new Datastore({
   filename: "./database/clients.db",
-  autoload: "true",
+  autoload: true,
 });
 
 const recordings = new Datastore({
   filename: "./database/recordings.db",
-  autoload: "true",
+  autoload: true,
 });
 
 const database = {

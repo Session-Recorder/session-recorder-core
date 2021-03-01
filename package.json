@@ -5,8 +5,8 @@
 	"scripts": {
 		"watch": "tsc --watch",
 		"dev": "NODE_PATH=./dist nodemon ./dist/index.js",
-		"bundle": "parcel build --no-source-maps bundler/dist/index.js -d public/bundle",
-		"bundle:watch": "parcel watch --no-source-maps bundler/dist/index.js -d public/bundle"
+		"bundle": "parcel build --no-source-maps bundler/src/index.ts -d public/bundle",
+		"bundle:watch": "parcel watch --no-source-maps bundler/src/index.ts -d public/bundle"
 	},
 	"dependencies": {
 		"cjs-to-es6": "^1.1.1",

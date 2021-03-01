@@ -13,5 +13,8 @@
 		"axios": "^0.21.1",
 		"rrweb": "^0.9.14",
 		"shortid": "^2.2.16"
+	},
+	"devDependencies": {
+		"typescript": "^4.2.2"
 	}
 }

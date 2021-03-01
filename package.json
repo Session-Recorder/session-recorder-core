@@ -12,6 +12,7 @@
     "bundle:watch": "parcel watch --no-source-maps bundler/src/index.ts -d public/bundle"
   },
   "dependencies": {
+    "@types/nedb": "^1.8.11",
     "cjs-to-es6": "^1.1.1",
     "concurrently": "^6.0.0",
     "cookie-parser": "~1.4.4",

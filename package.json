@@ -3,11 +3,20 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon ./bin/www --ignore database/*",
-    "bundle": "parcel build bundler/src/index.js --out-dir public/bundle",
-    "bundle:watch": "parcel watch bundler/src/index.js --out-dir public/bundle"
+    "prettier:check": "prettier ./src/**/*.ts --check",
+    "prettier:write": "prettier ./src/**/*.ts --write",
+    "transpile:watch": "tsc --watch",
+    "transpile": "tsc",
+    "serve:watch": "NODE_PATH=./dist nodemon ./dist/index.js",
+    "serve": "NODE_PATH=./dist node ./dist/index.js",
+    "dev": "concurrently \"npm:transpile:watch\" \"npm:serve:watch\" \"npm:bundle:watch\"",
+    "bundle": "parcel build --no-source-maps bundler/src/index.ts -d public/bundle",
+    "bundle:watch": "parcel watch --no-source-maps bundler/src/index.ts -d public/bundle"
   },
   "dependencies": {
+    "@types/nedb": "^1.8.11",
+    "cjs-to-es6": "^1.1.1",
+    "concurrently": "^6.0.0",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
@@ -17,12 +26,24 @@
     "http-errors": "~1.6.3",
     "lodash": "^4.17.21",
     "morgan": "~1.9.1",
-    "nedb": "^1.8.0",
     "request-country": "^0.1.5",
     "request-ip": "^2.1.3",
-    "shortid": "^2.2.16"
+    "shortid": "^2.2.16",
+    "source-map-support": "^0.5.19"
   },
   "devDependencies": {
-    "nodemon": "^2.0.7"
+    "@types/cookie-parser": "^1.4.2",
+    "@types/cors": "^2.8.10",
+    "@types/express": "^4.17.11",
+    "@types/geoip-country": "^4.0.0",
+    "@types/http-errors": "^1.8.0",
+    "@types/lodash": "^4.14.168",
+    "@types/morgan": "^1.9.2",
+    "@types/node": "^14.14.31",
+    "nedb": "^1.8.0",
+    "nodemon": "^2.0.7",
+    "prettier": "^2.2.1",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.2"
   }
 }

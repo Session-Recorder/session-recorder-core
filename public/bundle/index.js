@@ -9517,34 +9517,42 @@ module.exports.default = axios;
 
 },{"./utils":"../node_modules/axios/lib/utils.js","./helpers/bind":"../node_modules/axios/lib/helpers/bind.js","./core/Axios":"../node_modules/axios/lib/core/Axios.js","./core/mergeConfig":"../node_modules/axios/lib/core/mergeConfig.js","./defaults":"../node_modules/axios/lib/defaults.js","./cancel/Cancel":"../node_modules/axios/lib/cancel/Cancel.js","./cancel/CancelToken":"../node_modules/axios/lib/cancel/CancelToken.js","./cancel/isCancel":"../node_modules/axios/lib/cancel/isCancel.js","./helpers/spread":"../node_modules/axios/lib/helpers/spread.js","./helpers/isAxiosError":"../node_modules/axios/lib/helpers/isAxiosError.js"}],"../node_modules/axios/index.js":[function(require,module,exports) {
 module.exports = require('./lib/axios');
-},{"./lib/axios":"../node_modules/axios/lib/axios.js"}],"index.js":[function(require,module,exports) {
+},{"./lib/axios":"../node_modules/axios/lib/axios.js"}],"index.ts":[function(require,module,exports) {
 "use strict";
 
-var _rrweb = require("rrweb");
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
 
-var _axios = _interopRequireDefault(require("axios"));
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var rrweb_1 = require("rrweb");
+
+var axios_1 = __importDefault(require("axios"));
 
 var eventsBuffer = [];
-(0, _rrweb.record)({
+var _a = window.sessionRecorderConfig,
+    websiteId = _a.websiteId,
+    apiUrl = _a.apiUrl;
+rrweb_1.record({
   emit: function emit(event) {
     eventsBuffer.push(event);
   }
 });
-var _window$sessionRecord = window.sessionRecorderConfig,
-    websiteId = _window$sessionRecord.websiteId,
-    apiUrl = _window$sessionRecord.apiUrl;
 
-function idenfityClient() {
+function identifyClient() {
   return new Promise(function (resolve, reject) {
     var clientId = sessionStorage.getItem("clientId");
 
     if (clientId) {
       resolve(clientId);
     } else {
-      _axios.default.post("".concat(apiUrl, "/api/clients")).then(function (_ref) {
-        var data = _ref.data;
+      axios_1.default.post(apiUrl + "/api/clients").then(function (_a) {
+        var data = _a.data;
         sessionStorage.setItem("clientId", data.clientId);
         resolve(data.clientId);
       }).catch(reject);
@@ -9554,8 +9562,8 @@ function idenfityClient() {
 
 function identifySession() {
   return new Promise(function (resolve, reject) {
-    _axios.default.get("https://api.ipify.org?format=json").then(function (_ref2) {
-      var data = _ref2.data;
+    axios_1.default.get("https://api.ipify.org?format=json").then(function (_a) {
+      var data = _a.data;
       var ip = data.ip;
       var sessionId = window.sessionId;
 
@@ -9563,7 +9571,7 @@ function identifySession() {
         resolve(sessionId);
       } else {
         // generate new session if doesnt' exist.
-        _axios.default.post("".concat(apiUrl, "/api/sessions"), {
+        axios_1.default.post(apiUrl + "/api/sessions", {
           ip: ip,
           location: window.location,
           clientId: sessionStorage.getItem("clientId")
@@ -9571,8 +9579,8 @@ function identifySession() {
           params: {
             websiteId: websiteId
           }
-        }).then(function (_ref3) {
-          var data = _ref3.data;
+        }).then(function (_a) {
+          var data = _a.data;
           window.sessionId = data._id;
           resolve(data._id);
         }).catch(reject);
@@ -9582,7 +9590,7 @@ function identifySession() {
 }
 
 function save(sessionId, clientId) {
-  _axios.default.post("".concat(apiUrl, "/api/sessions/").concat(sessionId, "/recordings"), {
+  axios_1.default.post(apiUrl + "/api/sessions/" + sessionId + "/recordings", {
     events: eventsBuffer,
     clientId: clientId
   }).then(function (result) {
@@ -9595,7 +9603,7 @@ function save(sessionId, clientId) {
 }
 
 try {
-  idenfityClient().then(function (clientId) {
+  identifyClient().then(function (clientId) {
     identifySession().then(function (sessionId) {
       setInterval(function () {
         save(sessionId, clientId);
@@ -9633,7 +9641,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "42027" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "45393" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -9809,5 +9817,4 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../../../../../.nvm/versions/node/v14.15.4/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","index.js"], null)
-//# sourceMappingURL=/index.js.map
+},{}]},{},["../../../../../.nvm/versions/node/v14.15.4/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","index.ts"], null)

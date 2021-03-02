@@ -1,10 +1,10 @@
-import createError from "http-errors";
+import createError, { HttpError } from "http-errors";
 import express from "express";
 import path from "path";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 import cors from "cors";
-import indexRouter from "controllers/index";
+import indexRouter from "routes/index";
 
 const app: express.Application = express();
 
@@ -26,13 +26,15 @@ app.use("/", indexRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-  next(createError(404));
+	next(createError(404));
 });
 
 // error handler
 app.use(function (err, req, res, next) {
-  console.log(err);
-  res.status(500).json(err);
+	console.log(err);
+	if (err instanceof HttpError && err.statusCode === 404)
+		return res.status(404).json(err);
+	res.status(500).json(err);
 });
 
 export default app;

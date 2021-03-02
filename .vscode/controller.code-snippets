@@ -1,0 +1,18 @@
+{
+  "controllerMethod": {
+    "scope": "javascript,typescript",
+    "prefix": "controllermethod",
+    "body": ["$1: RequestHandler = (req, res, next) => {", "  $2", "}"],
+    "description": ""
+  },
+  "controllerClass": {
+    "scope": "javascript,typescript",
+    "prefix": "controllerclass",
+    "body": [
+      "export class $1ControllerGroup extends AbstractControllerGroup {",
+      "  ",
+      "}"
+    ],
+    "description": ""
+  }
+}

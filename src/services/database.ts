@@ -1,4 +1,5 @@
 import Datastore from "nedb";
+import { IDatabaseService } from "types";
 
 const websites = new Datastore({
   filename: "./database/websites.db",
@@ -20,11 +21,11 @@ const recordings = new Datastore({
   autoload: true,
 });
 
-const database = {
+const databaseService: IDatabaseService = {
   websites,
   sessions,
   clients,
   recordings,
 };
 
-export default database;
+export default databaseService;

@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 import _ from "lodash";
 import databaseService from "services/database.service";
-import { apiUrl } from "config";
+import config from "config";
 
 export const getAll: RequestHandler = (req, res, next) => {
 	databaseService.websites.find({}, (err: any, websites: any) => {
@@ -31,10 +31,10 @@ export const getTrackerCode: RequestHandler = (req, res, next) => {
     <script>
       window.sessionRecorderConfig = {
         websiteId: "${websiteId}",
-        apiUrl: "${apiUrl}",
+        apiUrl: "${config.apiUrl}",
       };
     </script>
-    <script src="${apiUrl}/bundle/index.js"></script>
+    <script src="${config.apiUrl}/bundle/index.js"></script>
     `;
 	res.json(code);
 };

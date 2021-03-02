@@ -1,16 +1,14 @@
 import { Router } from "express";
-import databaseService from "services/database";
-import { WebsiteControllerGroup } from "controllers/website.controllers";
+import * as websiteController from "controllers/website.controller";
 
-const websitesRouter = Router();
-const websiteControllerGroup = new WebsiteControllerGroup(databaseService);
+const websiteRouter = Router();
 
-websitesRouter
-  .get("/", websiteControllerGroup.getAll)
-  .post("/", websiteControllerGroup.create)
-  .get("/:websiteId", websiteControllerGroup.getOne)
-  .patch("/:websiteId", websiteControllerGroup.updateOne)
-  .delete("/:websiteId", websiteControllerGroup.deleteOne)
-  .get("/:websiteId/code", websiteControllerGroup.getTrackerCode);
+websiteRouter
+	.get("/", websiteController.getAll)
+	.post("/", websiteController.create)
+	.get("/:websiteId", websiteController.getOne)
+	.patch("/:websiteId", websiteController.updateOne)
+	.delete("/:websiteId", websiteController.deleteOne)
+	.get("/:websiteId/code", websiteController.getTrackerCode);
 
-export default websitesRouter;
+export default websiteRouter;

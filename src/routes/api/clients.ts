@@ -1,10 +1,7 @@
-import { ClientControllerGroup } from "controllers/client.controllers";
+import * as clientController from "controllers/client.controller";
 import { Router } from "express";
-import databaseService from "services/database";
-const clientsRouter = Router();
+const clientRouter = Router();
 
-const clientControllerGroup = new ClientControllerGroup(databaseService);
+clientRouter.post("/", clientController.create);
 
-clientsRouter.post("/", clientControllerGroup.create);
-
-export default clientsRouter;
+export default clientRouter;

@@ -1,16 +1,14 @@
-import { SessionControllerGroup } from "controllers/session.controllers";
+import * as sessionController from "controllers/session.controller";
 import { Router } from "express";
-import databaseService from "services/database";
 
-const sessionsRouter = Router();
-const sessionControllerGroup = new SessionControllerGroup(databaseService);
+const sessionRouter = Router();
 
-sessionsRouter
-  .get("/", sessionControllerGroup.getAll)
-  .post("/", sessionControllerGroup.create)
-  .get("/:sessionId", sessionControllerGroup.getOne)
-  .delete("/:sessionId", sessionControllerGroup.deleteOne)
-  .get("/:sessionId/recordings", sessionControllerGroup.getRecordings)
-  .post("/:sessionId/recordings", sessionControllerGroup.updateRecordings);
+sessionRouter
+	.get("/", sessionController.getAll)
+	.post("/", sessionController.create)
+	.get("/:sessionId", sessionController.getOne)
+	.delete("/:sessionId", sessionController.deleteOne)
+	.get("/:sessionId/recordings", sessionController.getRecordings)
+	.post("/:sessionId/recordings", sessionController.updateRecordings);
 
-export default sessionsRouter;
+export default sessionRouter;

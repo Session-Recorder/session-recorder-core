@@ -1,4 +1,4 @@
-import databaseService from "services/database";
+import databaseService from "services/database.service";
 import geoip from "geoip-country";
 import { RequestHandler } from "express";
 import fs from "fs";

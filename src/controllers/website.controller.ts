@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 import _ from "lodash";
-import databaseService from "services/database";
+import databaseService from "services/database.service";
 import { apiUrl } from "config";
 
 export const getAll: RequestHandler = (req, res, next) => {

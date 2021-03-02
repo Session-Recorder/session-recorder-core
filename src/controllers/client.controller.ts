@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import databaseService from "services/database";
+import databaseService from "services/database.service";
 
 export const create: RequestHandler = (req, res) => {
 	const createdAt = Date.now();

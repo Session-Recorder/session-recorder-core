@@ -1,31 +1,23 @@
 import Datastore from "nedb";
-import { IDatabaseService } from "types";
 
-const websites = new Datastore({
-  filename: "./database/websites.db",
-  autoload: true,
-});
+const datastoreFactory = (collectionName: string): Datastore =>
+	new Datastore({
+		filename: `./database/${collectionName}.db`,
+		autoload: true,
+	});
 
-const sessions = new Datastore({
-  filename: "./database/sessions.db",
-  autoload: true,
-});
+export type DatabaseService = {
+	websites: Datastore;
+	sessions: Datastore;
+	clients: Datastore;
+	recordings: Datastore;
+};
 
-const clients = new Datastore({
-  filename: "./database/clients.db",
-  autoload: true,
-});
-
-const recordings = new Datastore({
-  filename: "./database/recordings.db",
-  autoload: true,
-});
-
-const databaseService: IDatabaseService = {
-  websites,
-  sessions,
-  clients,
-  recordings,
+const databaseService: DatabaseService = {
+	websites: datastoreFactory("websites"),
+	sessions: datastoreFactory("sesions"),
+	clients: datastoreFactory("clients"),
+	recordings: datastoreFactory("recordings"),
 };
 
 export default databaseService;

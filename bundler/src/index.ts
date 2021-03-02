@@ -1,15 +1,12 @@
 import { record } from "rrweb";
 import axios from "axios";
+import jwt_decode from "jwt-decode";
 import { eventWithTime } from "rrweb/typings/types";
 
 let eventsBuffer: Array<eventWithTime> = [];
-
-type SessionRecorderConfig = {
-	websiteId: string;
-	apiUrl: string;
-};
-
-let { websiteId, apiUrl } = (window as any).sessionRecorderConfig;
+const { websiteId, apiUrl } = jwt_decode<{ websiteId: string; apiUrl: string }>(
+	(window as any).sessionRecorderToken
+);
 
 record({
 	emit(event: eventWithTime) {

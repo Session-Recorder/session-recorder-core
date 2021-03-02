@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
 import _ from "lodash";
 import databaseService from "services/database.service";
+import jwt from "jsonwebtoken";
 import config from "config";
 
 export const getAll: RequestHandler = (req, res, next) => {
@@ -26,14 +27,13 @@ export const getOne: RequestHandler = (req, res, next) => {
 };
 
 export const getTrackerCode: RequestHandler = (req, res, next) => {
-	const { websiteId } = req.params;
+	const payload = {
+		websiteId: req.params.websiteId,
+		apiUrl: config.apiUrl,
+	};
+	const token = jwt.sign(payload, config.jwtSecret);
 	const code = `
-    <script>
-      window.sessionRecorderConfig = {
-        websiteId: "${websiteId}",
-        apiUrl: "${config.apiUrl}",
-      };
-    </script>
+    <script>window.sessionRecorderToken=${token};</script>
     <script src="${config.apiUrl}/bundle/index.js"></script>
     `;
 	res.json(code);

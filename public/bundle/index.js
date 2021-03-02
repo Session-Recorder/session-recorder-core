@@ -9517,7 +9517,80 @@ module.exports.default = axios;
 
 },{"./utils":"../node_modules/axios/lib/utils.js","./helpers/bind":"../node_modules/axios/lib/helpers/bind.js","./core/Axios":"../node_modules/axios/lib/core/Axios.js","./core/mergeConfig":"../node_modules/axios/lib/core/mergeConfig.js","./defaults":"../node_modules/axios/lib/defaults.js","./cancel/Cancel":"../node_modules/axios/lib/cancel/Cancel.js","./cancel/CancelToken":"../node_modules/axios/lib/cancel/CancelToken.js","./cancel/isCancel":"../node_modules/axios/lib/cancel/isCancel.js","./helpers/spread":"../node_modules/axios/lib/helpers/spread.js","./helpers/isAxiosError":"../node_modules/axios/lib/helpers/isAxiosError.js"}],"../node_modules/axios/index.js":[function(require,module,exports) {
 module.exports = require('./lib/axios');
-},{"./lib/axios":"../node_modules/axios/lib/axios.js"}],"index.ts":[function(require,module,exports) {
+},{"./lib/axios":"../node_modules/axios/lib/axios.js"}],"../node_modules/jwt-decode/build/jwt-decode.esm.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.InvalidTokenError = n;
+exports.default = void 0;
+
+function e(e) {
+  this.message = e;
+}
+
+e.prototype = new Error(), e.prototype.name = "InvalidCharacterError";
+
+var r = "undefined" != typeof window && window.atob && window.atob.bind(window) || function (r) {
+  var t = String(r).replace(/=+$/, "");
+  if (t.length % 4 == 1) throw new e("'atob' failed: The string to be decoded is not correctly encoded.");
+
+  for (var n, o, a = 0, i = 0, c = ""; o = t.charAt(i++); ~o && (n = a % 4 ? 64 * n + o : o, a++ % 4) ? c += String.fromCharCode(255 & n >> (-2 * a & 6)) : 0) o = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".indexOf(o);
+
+  return c;
+};
+
+function t(e) {
+  var t = e.replace(/-/g, "+").replace(/_/g, "/");
+
+  switch (t.length % 4) {
+    case 0:
+      break;
+
+    case 2:
+      t += "==";
+      break;
+
+    case 3:
+      t += "=";
+      break;
+
+    default:
+      throw "Illegal base64url string!";
+  }
+
+  try {
+    return function (e) {
+      return decodeURIComponent(r(e).replace(/(.)/g, function (e, r) {
+        var t = r.charCodeAt(0).toString(16).toUpperCase();
+        return t.length < 2 && (t = "0" + t), "%" + t;
+      }));
+    }(t);
+  } catch (e) {
+    return r(t);
+  }
+}
+
+function n(e) {
+  this.message = e;
+}
+
+function o(e, r) {
+  if ("string" != typeof e) throw new n("Invalid token specified");
+  var o = !0 === (r = r || {}).header ? 0 : 1;
+
+  try {
+    return JSON.parse(t(e.split(".")[o]));
+  } catch (e) {
+    throw new n("Invalid token specified: " + e.message);
+  }
+}
+
+n.prototype = new Error(), n.prototype.name = "InvalidTokenError";
+var _default = o;
+exports.default = _default;
+},{}],"index.ts":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -9534,10 +9607,14 @@ var rrweb_1 = require("rrweb");
 
 var axios_1 = __importDefault(require("axios"));
 
+var jwt_decode_1 = __importDefault(require("jwt-decode"));
+
 var eventsBuffer = [];
-var _a = window.sessionRecorderConfig,
+
+var _a = jwt_decode_1.default(window.sessionRecorderToken),
     websiteId = _a.websiteId,
     apiUrl = _a.apiUrl;
+
 rrweb_1.record({
   emit: function emit(event) {
     eventsBuffer.push(event);
@@ -9613,7 +9690,7 @@ try {
 } catch (error) {
   console.error(error);
 }
-},{"rrweb":"../node_modules/rrweb/es/rrweb/src/entries/all.js","axios":"../node_modules/axios/index.js"}],"../../../../../../../usr/lib/node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"rrweb":"../node_modules/rrweb/es/rrweb/src/entries/all.js","axios":"../node_modules/axios/index.js","jwt-decode":"../node_modules/jwt-decode/build/jwt-decode.esm.js"}],"../../../../../../../usr/lib/node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -9641,7 +9718,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "43595" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "35359" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

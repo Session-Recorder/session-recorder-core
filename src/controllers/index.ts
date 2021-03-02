@@ -1,11 +1,13 @@
 import { Router } from "express";
-import apiRouter from "./api/index";
+import apiRouter from "../routes/api/index";
 
 const router = Router();
-router.use("/api", apiRouter);
 
+router.use("/api", apiRouter);
 router.get("/", (_, res) => {
-	res.send("Central API");
+	res.json({
+		message: "API Enterance"
+	})
 });
 
 export default router;

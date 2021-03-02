@@ -1,18 +1,10 @@
+import { ClientControllerGroup } from "controllers/client.controllers";
 import { Router } from "express";
-import database from "../../services/database";
-const router = Router();
+import databaseService from "services/database";
+const clientsRouter = Router();
 
-router.post("/", (req, res) => {
-	const createdAt = Date.now();
+const clientControllerGroup = new ClientControllerGroup(databaseService);
 
-	database.clients.insert({ createdAt }, (err, doc) => {
-		if (err) {
-			res.status(500).send(err);
-		} else {
-			const clientId = doc._id;
-			res.json({ clientId });
-		}
-	});
-});
+clientsRouter.post("/", clientControllerGroup.create);
 
-export default router;
+export default clientsRouter;

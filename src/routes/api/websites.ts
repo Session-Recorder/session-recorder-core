@@ -1,75 +1,16 @@
 import { Router } from "express";
-import _ from "lodash";
-import database from "../../services/database";
-const router = Router();
+import databaseService from "services/database";
+import { WebsiteControllerGroup } from "controllers/website.controllers";
 
-router.get("/", (req, res) => {
-	database.websites.find({}, (err, websites) => {
-		if (err) {
-			res.status(500).send(err);
-		} else {
-			res.send(websites);
-		}
-	});
-});
+const websitesRouter = Router();
+const websiteControllerGroup = new WebsiteControllerGroup(databaseService);
 
-router.post("/", (req, res) => {
-	const { name, domain, description } = req.body;
-	database.websites.insert(
-		{ name, domain, description, sessions: [] },
-		(err, website) => {
-			if (err) {
-				res.status(500).send(err);
-			} else {
-				res.status(201).send("Created");
-			}
-		}
-	);
-});
+websitesRouter
+  .get("/", websiteControllerGroup.getAll)
+  .post("/", websiteControllerGroup.create)
+  .get("/:websiteId", websiteControllerGroup.getOne)
+  .patch("/:websiteId", websiteControllerGroup.updateOne)
+  .delete("/:websiteId", websiteControllerGroup.deleteOne)
+  .get("/:websiteId/code", websiteControllerGroup.getTrackerCode);
 
-router.get("/:websiteId", (req, res) => {
-	const { websiteId } = req.params;
-
-	database.websites.findOne({ _id: websiteId }, (err, website) => {
-		if (err) {
-			res.status(500).send(err);
-		} else {
-			res.status(200).send(website);
-		}
-	});
-});
-
-router.patch("/:websiteId", (req, res) => {
-	const { websiteId } = req.params;
-	const data = req.body;
-
-	console.log({ data });
-	database.websites.update(
-		{
-			_id: websiteId,
-		},
-		{
-			$set: _.pick(data, ["name", "domain", "description"]),
-		},
-		(err, n) => {
-			if (err) {
-				res.status(500).json(err);
-			} else {
-				res.status(200).json(n);
-			}
-		}
-	);
-});
-
-router.delete("/:websiteId", (req, res) => {
-	const { websiteId } = req.params;
-	database.websites.remove({ _id: websiteId }, (err, n) => {
-		if (err) {
-			res.status(500).json(err);
-		} else {
-			res.status(200).json(n);
-		}
-	});
-});
-
-export default router;
+export default websitesRouter;

@@ -1,17 +1,23 @@
 import { record } from "rrweb";
 import axios from "axios";
+import { eventWithTime } from "rrweb/typings/types";
 
-let eventsBuffer = [];
+let eventsBuffer: Array<eventWithTime> = [];
+
+type SessionRecorderConfig = {
+	websiteId: string;
+	apiUrl: string;
+};
+
+let { websiteId, apiUrl } = (window as any).sessionRecorderConfig;
 
 record({
-	emit(event) {
+	emit(event: eventWithTime) {
 		eventsBuffer.push(event);
 	},
 });
 
-let { websiteId, apiUrl } = window.sessionRecorderConfig;
-
-function idenfityClient() {
+function identifyClient(): Promise<string> {
 	return new Promise((resolve, reject) => {
 		const clientId = sessionStorage.getItem("clientId");
 		if (clientId) {
@@ -28,13 +34,13 @@ function idenfityClient() {
 	});
 }
 
-function identifySession() {
+function identifySession(): Promise<string> {
 	return new Promise((resolve, reject) => {
 		axios
 			.get("https://api.ipify.org?format=json")
 			.then(({ data }) => {
 				const ip = data.ip;
-				const sessionId = window.sessionId;
+				const sessionId = (window as any).sessionId;
 				if (sessionId) {
 					resolve(sessionId);
 				} else {
@@ -44,13 +50,13 @@ function identifySession() {
 							`${apiUrl}/api/sessions`,
 							{
 								ip,
-								location: window.location,
+								location: (window as any).location,
 								clientId: sessionStorage.getItem("clientId"),
 							},
 							{ params: { websiteId } }
 						)
 						.then(({ data }) => {
-							window.sessionId = data._id;
+							(window as any).sessionId = data._id;
 							resolve(data._id);
 						})
 						.catch(reject);
@@ -60,7 +66,7 @@ function identifySession() {
 	});
 }
 
-function save(sessionId, clientId) {
+function save(sessionId: string, clientId: string) {
 	axios
 		.post(`${apiUrl}/api/sessions/${sessionId}/recordings`, {
 			events: eventsBuffer,
@@ -77,7 +83,7 @@ function save(sessionId, clientId) {
 }
 
 try {
-	idenfityClient().then((clientId) => {
+	identifyClient().then((clientId) => {
 		identifySession().then((sessionId) => {
 			setInterval(() => {
 				save(sessionId, clientId);

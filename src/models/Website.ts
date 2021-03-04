@@ -14,4 +14,4 @@ const websiteSchema = new Schema<WebsiteDocument>({
 	sessions: [{ type: Types.ObjectId, ref: "Session" }],
 });
 
-export const WebsiteModel = model<WebsiteDocument>("Website", websiteSchema);
+export const Website = model<WebsiteDocument>("Website", websiteSchema);

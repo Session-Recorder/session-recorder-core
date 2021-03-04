@@ -47,7 +47,7 @@ function identifySession(): Promise<string> {
 							`${apiUrl}/api/sessions`,
 							{
 								ip,
-								location: (window as any).location,
+								location: window.location,
 								clientId: sessionStorage.getItem("clientId"),
 							},
 							{ params: { websiteId } }

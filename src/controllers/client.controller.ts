@@ -5,7 +5,7 @@ import databaseService from "services/database.service";
 export const create: RequestHandler = (req, res, next) => {
 	const createdAt = Date.now();
 
-	databaseService.clients.insert({ createdAt }, (err, doc) => {
+	databaseService.clients.create({ createdAt }, (err, doc) => {
 		if (err) {
 			return next(new createError.InternalServerError());
 		}

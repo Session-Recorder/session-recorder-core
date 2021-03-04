@@ -4,4 +4,4 @@ export type ClientDocument = Document;
 
 const clientSchema = new Schema<ClientDocument>();
 
-export const ClientModel = model<ClientDocument>("Client", clientSchema);
+export const Client = model<ClientDocument>("Client", clientSchema);

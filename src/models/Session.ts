@@ -4,7 +4,7 @@ import { Document, Schema, model, Types } from "mongoose";
 export type SessionDocument = Document & {
 	// recording: Array<any>;
 	ip: string;
-	location: string;
+	location: object;
 	websiteId: Types.ObjectId;
 	clientId: Types.ObjectId;
 	createdAt: Date;
@@ -13,10 +13,10 @@ export type SessionDocument = Document & {
 const sessionSchema = new Schema<SessionDocument>({
 	// recording: [Any],
 	ip: String,
-	location: String,
+	location: Object,
 	websiteId: { type: Types.ObjectId, ref: "Website" },
 	clientId: { type: Types.ObjectId, ref: "Client" },
 	createdAt: Date,
 });
 
-export const SessionModel = model<SessionDocument>("Session", sessionSchema);
+export const Session = model<SessionDocument>("Session", sessionSchema);

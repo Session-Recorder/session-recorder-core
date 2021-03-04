@@ -1,23 +1,11 @@
-import Datastore from "nedb";
+import { Session } from "./../models/Session";
+import { Client } from "./../models/Client";
+import { Website } from "./../models/Website";
 
-const datastoreFactory = (collectionName: string): Datastore =>
-	new Datastore({
-		filename: `./database/${collectionName}.db`,
-		autoload: true,
-	});
-
-export type DatabaseService = {
-	websites: Datastore;
-	sessions: Datastore;
-	clients: Datastore;
-	recordings: Datastore;
-};
-
-const databaseService: DatabaseService = {
-	websites: datastoreFactory("websites"),
-	sessions: datastoreFactory("sesions"),
-	clients: datastoreFactory("clients"),
-	recordings: datastoreFactory("recordings"),
+const databaseService = {
+	websites: Website,
+	clients: Client,
+	sessions: Session,
 };
 
 export default databaseService;

@@ -1,15 +1,30 @@
-import createError from "http-errors";
-import express from "express";
-import path from "path";
+import config from "config";
 import cookieParser from "cookie-parser";
-import morgan from "morgan";
 import cors from "cors";
-import indexRouter from "routes/index";
+import express from "express";
+import createError from "http-errors";
 import errorHandler from "middlewares/error.middleware";
+import mongoose from "mongoose";
+import morgan from "morgan";
+import path from "path";
+import indexRouter from "routes/index";
+import logger from "services/logger.service";
 
 const app = express();
 
 app.use(cors());
+
+// database connection
+mongoose
+	.connect(config.mongoURI, {
+		useNewUrlParser: true,
+		bufferCommands: false,
+		useUnifiedTopology: true,
+	})
+	.then(() => logger.log("info", "MongoDB successfully connected"))
+	.catch((err) =>
+		logger.log("error", `MongoDB connection failed. error: ${err}`)
+	);
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -27,7 +42,7 @@ app.use("/", indexRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-	next(new createError.NotFound());
+	next(new createError.NotFound("Route Not Found"));
 });
 
 app.use(errorHandler);

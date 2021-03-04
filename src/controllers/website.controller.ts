@@ -6,11 +6,8 @@ import config from "config";
 
 export const getAll: RequestHandler = (req, res, next) => {
 	databaseService.websites.find({}, (err: any, websites: any) => {
-		if (err) {
-			next(err);
-		} else {
-			res.json(websites);
-		}
+		if (err) return next(err);
+		res.json(websites);
 	});
 };
 
@@ -18,11 +15,8 @@ export const getOne: RequestHandler = (req, res, next) => {
 	const { websiteId } = req.params;
 
 	databaseService.websites.findOne({ _id: websiteId }, (err, website) => {
-		if (err) {
-			next(err);
-		} else {
-			res.json(website);
-		}
+		if (err) return next(err);
+		res.json(website);
 	});
 };
 
@@ -44,11 +38,8 @@ export const create: RequestHandler = (req, res, next) => {
 	databaseService.websites.insert(
 		{ name, domain, description, sessions: [] },
 		(err, website) => {
-			if (err) {
-				next(err);
-			} else {
-				res.status(201).json(website);
-			}
+			if (err) return next(err);
+			res.status(201).json(website);
 		}
 	);
 };
@@ -66,11 +57,8 @@ export const updateOne: RequestHandler = (req, res, next) => {
 		},
 		{}, // updateOptions
 		(err: any, n: any) => {
-			if (err) {
-				next(err);
-			} else {
-				res.json(n);
-			}
+			if (err) return next(err);
+			res.json(n);
 		}
 	);
 };
@@ -78,10 +66,7 @@ export const updateOne: RequestHandler = (req, res, next) => {
 export const deleteOne: RequestHandler = (req, res, next) => {
 	const { websiteId } = req.params;
 	databaseService.websites.remove({ _id: websiteId }, (err, n) => {
-		if (err) {
-			next(err);
-		} else {
-			res.json(n);
-		}
+		if (err) return next(err);
+		res.json(n);
 	});
 };

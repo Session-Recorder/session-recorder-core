@@ -70,12 +70,12 @@ function save(sessionId: string, clientId: string) {
 			clientId,
 		})
 		.then((result) => {
-			// eventsBuffer = [];
+			eventsBuffer = [];
 			console.log("Successfully Sent To Server");
 		})
 		.catch((error) => {
-			console.log("Failure Sending.");
 			console.error(error);
+			console.log("Failure Sending.");
 		});
 }
 

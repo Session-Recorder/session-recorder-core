@@ -1,3 +1,4 @@
+import { eventWithTime } from "rrweb/typings/types";
 import { RequestHandler } from "express";
 import fs from "fs";
 import geoip from "geoip-country";
@@ -120,15 +121,20 @@ export const updateRecordings: RequestHandler = (req, res, next) => {
 				return next(new createError.NotFound("No Document"));
 			}
 
-			fs.writeFile(
-				path.join(__dirname, `../../database/recordings/${sessionId}.json`),
-				JSON.stringify(req.body.events),
-				(err) => {
-					if (err) return next(err);
-					res.status(200).send("success");
-					logger.info("success");
-				}
+			const filePath = path.join(
+				__dirname,
+				`../../database/recordings/${sessionId}.json`
 			);
+			fs.readFile(filePath, (err, data) => {
+				if (err) return next(err);
+				const events: Array<eventWithTime> = JSON.parse(data.toString());
+				events.push(...req.body.events);
+				fs.writeFile(filePath, JSON.stringify(events), {}, (err) => {
+					if (err) return next(err);
+					res.sendStatus(200);
+					logger.info("successfully saved");
+				});
+			});
 		}
 	);
 };

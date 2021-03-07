@@ -7,7 +7,7 @@
 		"prettier:write": "prettier ./src/**/*.ts --write",
 		"transpile:watch": "tsc --watch",
 		"transpile": "tsc",
-		"serve:watch": "NODE_PATH=./dist nodemon ./dist/index.js",
+		"serve:watch": "NODE_PATH=./dist nodemon --watch ./dist ./dist/index.js",
 		"serve": "NODE_PATH=./dist node ./dist/index.js",
 		"dev": "concurrently \"npm:transpile:watch\" \"npm:serve:watch\" \"npm:bundle:watch\"",
 		"bundle": "parcel build --no-source-maps bundler/src/index.ts -d public/bundle",

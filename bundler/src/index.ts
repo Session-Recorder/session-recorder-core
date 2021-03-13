@@ -82,6 +82,7 @@ function save(sessionId: string, clientId: string) {
 try {
 	identifyClient().then((clientId) => {
 		identifySession().then((sessionId) => {
+			window.addEventListener("beforeunload", () => save(sessionId, clientId));
 			setInterval(() => {
 				save(sessionId, clientId);
 			}, 5 * 1000);

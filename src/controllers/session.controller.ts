@@ -24,16 +24,7 @@ export const create: RequestHandler = (req, res, next) => {
 			{ websiteId, ip, location, clientId, createdAt: Date.now() },
 			(err, document) => {
 				if (err) return next(err);
-
-				const sessionId = document["_id"];
-				fs.writeFile(
-					path.join(__dirname, `../../database/recordings/${sessionId}.json`),
-					"[]",
-					(err) => {
-						if (err) next(err);
-						res.status(200).send(document);
-					}
-				);
+				res.status(200).send(document);
 			}
 		);
 	});
@@ -96,12 +87,17 @@ export const deleteMany: RequestHandler = (req, res, next) => {
 export const getRecordings: RequestHandler = (req, res, next) => {
 	const { sessionId } = req.params;
 	logger.info(JSON.stringify({ sessionId, body: req.body }, null, 2));
-	fs.readFile(
-		path.join(__dirname, `../../database/recordings/${sessionId}.json`),
-		"utf-8",
-		(err, data) => {
+	databaseService.sessions.findOne(
+		{ _id: sessionId },
+		{ recording: true },
+		{},
+		(err, doc) => {
 			if (err) return next(err);
-			res.json(JSON.parse(data));
+			if (!doc) {
+				logger.warn("No Document");
+				return next(new createError.NotFound("No Document"));
+			}
+			res.json(doc.recording);
 		}
 	);
 };
@@ -110,29 +106,24 @@ export const updateRecordings: RequestHandler = (req, res, next) => {
 	const { sessionId } = req.params;
 	databaseService.sessions.findOne(
 		{ _id: sessionId },
+		{ recording: true },
 		{},
-		{},
-		(err, document) => {
+		(err, oldDocument) => {
 			if (err) return next(err);
-			if (!document) {
+			if (!oldDocument) {
 				logger.warn("No Document");
 				return next(new createError.NotFound("No Document"));
 			}
-
-			const filePath = path.join(
-				__dirname,
-				`../../database/recordings/${sessionId}.json`
-			);
-			fs.readFile(filePath, (err, data) => {
-				if (err) return next(err);
-				const events: Array<eventWithTime> = JSON.parse(data.toString());
-				events.push(...req.body.event);
-				fs.writeFile(filePath, JSON.stringify(events), {}, (err) => {
+			databaseService.sessions.updateOne(
+				{ _id: sessionId },
+				{ $set: { recording: [...oldDocument.recording, ...req.body.events] } },
+				{},
+				(err, newDocument) => {
 					if (err) return next(err);
 					res.sendStatus(200);
 					logger.info(`successfully saved`);
-				});
-			});
+				}
+			);
 		}
 	);
 };

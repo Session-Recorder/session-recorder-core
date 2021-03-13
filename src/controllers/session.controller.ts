@@ -46,7 +46,6 @@ export const getAll: RequestHandler = (req, res, next) => {
 		{},
 		{},
 		(err, sessions) => {
-			console.log(sessions);
 			if (err) return next(err);
 			res.json(
 				sessions.map((session) => ({
@@ -109,7 +108,6 @@ export const getRecordings: RequestHandler = (req, res, next) => {
 
 export const updateRecordings: RequestHandler = (req, res, next) => {
 	const { sessionId } = req.params;
-
 	databaseService.sessions.findOne(
 		{ _id: sessionId },
 		{},
@@ -128,11 +126,11 @@ export const updateRecordings: RequestHandler = (req, res, next) => {
 			fs.readFile(filePath, (err, data) => {
 				if (err) return next(err);
 				const events: Array<eventWithTime> = JSON.parse(data.toString());
-				events.push(...req.body.events);
+				events.push(...req.body.event);
 				fs.writeFile(filePath, JSON.stringify(events), {}, (err) => {
 					if (err) return next(err);
 					res.sendStatus(200);
-					logger.info("successfully saved");
+					logger.info(`successfully saved`);
 				});
 			});
 		}

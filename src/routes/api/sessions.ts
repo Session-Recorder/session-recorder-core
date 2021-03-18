@@ -6,6 +6,7 @@ const sessionRouter = Router();
 sessionRouter
 	.get("/", sessionController.getAll)
 	.post("/", sessionController.create)
+	.post("/delete-many", sessionController.deleteMany)
 	.get("/:sessionId", sessionController.getOne)
 	.delete("/:sessionId", sessionController.deleteOne)
 	.get("/:sessionId/recordings", sessionController.getRecordings)

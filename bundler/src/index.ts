@@ -16,14 +16,14 @@ record({
 
 function identifyClient(): Promise<string> {
 	return new Promise((resolve, reject) => {
-		const clientId = sessionStorage.getItem("clientId");
+		const clientId = localStorage.getItem("clientId");
 		if (clientId) {
 			resolve(clientId);
 		} else {
 			axios
 				.post(`${apiUrl}/api/clients`)
 				.then(({ data }) => {
-					sessionStorage.setItem("clientId", data.clientId);
+					localStorage.setItem("clientId", data.clientId);
 					resolve(data.clientId);
 				})
 				.catch(reject);
@@ -37,7 +37,7 @@ function identifySession(): Promise<string> {
 			.get("https://api.ipify.org?format=json")
 			.then(({ data }) => {
 				const ip = data.ip;
-				const sessionId = (window as any).sessionId;
+				const sessionId = sessionStorage.getItem("sessionId");
 				if (sessionId) {
 					resolve(sessionId);
 				} else {
@@ -48,12 +48,12 @@ function identifySession(): Promise<string> {
 							{
 								ip,
 								location: window.location,
-								clientId: sessionStorage.getItem("clientId"),
+								clientId: localStorage.getItem("clientId"),
 							},
 							{ params: { websiteId } }
 						)
 						.then(({ data }) => {
-							(window as any).sessionId = data._id;
+							sessionStorage.setItem("sessionId", data._id);
 							resolve(data._id);
 						})
 						.catch(reject);
@@ -70,18 +70,19 @@ function save(sessionId: string, clientId: string) {
 			clientId,
 		})
 		.then((result) => {
-			// eventsBuffer = [];
+			eventsBuffer = [];
 			console.log("Successfully Sent To Server");
 		})
 		.catch((error) => {
-			console.log("Failure Sending.");
 			console.error(error);
+			console.log("Failure Sending.");
 		});
 }
 
 try {
 	identifyClient().then((clientId) => {
 		identifySession().then((sessionId) => {
+			window.addEventListener("beforeunload", () => save(sessionId, clientId));
 			setInterval(() => {
 				save(sessionId, clientId);
 			}, 5 * 1000);
